@@ -14,7 +14,8 @@ public class LiterAluraApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Principal principal = new Principal();
-        principal.prueba();
+
+       Principal principal = new Principal();
+       principal.prueba();
     }
 }
