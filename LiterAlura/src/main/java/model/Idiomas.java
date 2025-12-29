@@ -7,10 +7,10 @@ public enum Idiomas {
     portuguese("pt"),
     italian("it");
 
-    private String lenguage;
+    private String language;
 
-    Idiomas(String lenguage) {
-        this.lenguage = lenguage;
+    Idiomas(String language) {
+        this.language = language;
     }
 
     // Se realiza el Cast del String del API a alguna de las categorías del Enum
@@ -19,7 +19,7 @@ public enum Idiomas {
         for (Idiomas idioma : Idiomas.values()) {
             // Sí idioma.lenguage es igual a text, retornara el valor (Constante)
             // que corresponde a esa categoría.
-            if (idioma.lenguage.equalsIgnoreCase(text)) {
+            if (idioma.language.equalsIgnoreCase(text)) {
                 return idioma;
             }
             //De lo contrarió lanzará una excepción:
