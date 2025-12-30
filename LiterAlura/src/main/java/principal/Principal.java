@@ -1,13 +1,22 @@
 package principal;
 
+import model.DatosDeTodosLosLibros;
+import model.DatosLibros;
+import model.Libro;
 import service.ConsumoAPI;
+import service.ConvierteDatos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
     private Scanner scanner = new Scanner(System.in);
     private ConsumoAPI consumoAPI = new ConsumoAPI();
-    private static String URL_BASE = "http:///books?";
+    private ConvierteDatos convierteDatos = new ConvierteDatos();
+    private static String URL_BASE = "https://gutendex.com/books/?";
+    private List<DatosLibros> libroList = new ArrayList<>();
 
     public void menu(){
         var opcion = -1;
@@ -23,6 +32,7 @@ public class Principal {
                     """;
             System.out.println(menu);
             opcion = scanner.nextInt();
+            scanner.nextLine();
 
             switch (opcion) {
                 case 1:
@@ -40,9 +50,12 @@ public class Principal {
                 case 5:
                     listarLibrosPorIdiomaEnBD();
                     break;
+                case 0:
+                    System.out.println("Saliendo...");
+                    break;
                 default:
                     System.out.println("Opción invalida");
-                    break;
+
 
 
             }
@@ -50,8 +63,16 @@ public class Principal {
 
     }
 
+
+    private void datosLibro() {
+        System.out.println("Ingrese el nombre del libro que desea buscar");
+        var libroInput = scanner.nextLine();
+        var json = consumoAPI.obtenerDatos((URL_BASE + "search=" + libroInput.toLowerCase()).replace(" ", "%20"));
+        System.out.println("JSON crudo => [" + json + "]");
+        DatosDeTodosLosLibros listaLibros = convierteDatos.obtenerDatos(json, DatosDeTodosLosLibros.class);
+    }
+
     private void buscarLibroPorTitulo() {
-        System.out.println("1");
     }
 
     private void listarLibrosEnBD() {
