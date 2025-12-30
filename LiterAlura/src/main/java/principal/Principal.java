@@ -50,5 +50,27 @@ public class Principal {
 
     }
 
+    private void buscarLibroPorTitulo() {
+        System.out.println("1");
+    }
+
+    private void listarLibrosEnBD() {
+        System.out.println("2");
+    }
+
+    private void listarAutoresEnBD() {
+        System.out.println("3");
+    }
+
+    private void listarAutoresPorFecha() {
+        System.out.println("4");
+    }
+
+    private void listarLibrosPorIdiomaEnBD() {
+        System.out.println("5");
+    }
+
+
+
 
 }

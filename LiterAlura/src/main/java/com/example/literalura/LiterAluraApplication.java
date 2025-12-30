@@ -16,6 +16,6 @@ public class LiterAluraApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
        Principal principal = new Principal();
-       principal.prueba();
+       principal.menu();
     }
 }
