@@ -1,10 +1,11 @@
-package principal;
+package com.example.literalura.principal;
 
-import model.DatosDeTodosLosLibros;
-import model.DatosLibros;
-import model.Libro;
-import service.ConsumoAPI;
-import service.ConvierteDatos;
+import com.example.literalura.model.DatosResults;
+import com.example.literalura.model.DatosLibros;
+import com.example.literalura.model.Libro;
+import com.example.literalura.repository.AutoresRepository;
+import com.example.literalura.service.ConsumoAPI;
+import com.example.literalura.service.ConvierteDatos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,12 @@ public class Principal {
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConvierteDatos convierteDatos = new ConvierteDatos();
     private static String URL_BASE = "https://gutendex.com/books/?";
+    private DatosResults listaLibros;
+    private String libroInput;
     private List<DatosLibros> libroList = new ArrayList<>();
+
+    public Principal(AutoresRepository repository) {
+    }
 
     public void menu(){
         var opcion = -1;
@@ -66,13 +72,22 @@ public class Principal {
 
     private void datosLibro() {
         System.out.println("Ingrese el nombre del libro que desea buscar");
-        var libroInput = scanner.nextLine();
+        libroInput = scanner.nextLine();
         var json = consumoAPI.obtenerDatos((URL_BASE + "search=" + libroInput.toLowerCase()).replace(" ", "%20"));
-        System.out.println("JSON crudo => [" + json + "]");
-        DatosDeTodosLosLibros listaLibros = convierteDatos.obtenerDatos(json, DatosDeTodosLosLibros.class);
+        listaLibros = convierteDatos.obtenerDatos(json, DatosResults.class);
+
     }
 
     private void buscarLibroPorTitulo() {
+        datosLibro();
+        List<Libro> libro = listaLibros.listaLibros().stream()
+                .filter(book -> book.titulo().contains(libroInput))
+                .limit(1)
+                .map(Libro::new)
+                .collect(Collectors.toList());
+        System.out.println(libro);
+
+
     }
 
     private void listarLibrosEnBD() {
