@@ -22,10 +22,12 @@ public class Libro {
     @Enumerated(EnumType.STRING)
     private List<Idiomas> idiomas = new ArrayList<>();
 
+    private Integer descargas;
     public Libro() {}
 
     public Libro(DatosLibros libro) {
         this.titulo = libro.titulo();
+        this.descargas = libro.descargas();
         this.idiomas = Idiomas.fromAPI(libro.idiomas());
     }
 
@@ -52,9 +54,11 @@ public class Libro {
 
     @Override
     public String toString() {
-        return "-------" + titulo.toUpperCase() + "-------\n"
-                + "Autor(es): " + autores + "\n"
-                + "Idioma(s): " + idiomas + "\n"
-                + "_________________________________________";
+        return "----- LIBRO -----" + "\n" +
+                "Título: " + titulo + "\n" +
+                "Autor: " + autores + "\n" +
+                "Idioma: " + idiomas + "\n" +
+                "Descargas: " + descargas + "\n" +
+                "-----------------";
     }
 }
