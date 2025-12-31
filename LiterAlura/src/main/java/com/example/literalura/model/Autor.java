@@ -1,12 +1,26 @@
-package model;
+package com.example.literalura.model;
 
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@Table(name = "autores")
 public class Autor {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    @Column(unique = true)
     private String nombre;
     private Integer nacimiento;
     private Integer fallecimiento;
-    private List<Libro> libros;
+    @ManyToMany
+    @JoinTable(
+            name = "autor_libro",
+            joinColumns = @JoinColumn(name = "autor_id"),
+            inverseJoinColumns = @JoinColumn(name = "libro_id")
+    )
+    private List<Libro> libros = new ArrayList<>();
 
     public Autor(){}
 
@@ -16,7 +30,7 @@ public class Autor {
         this.fallecimiento = autor.fallecimiento();
     }
 
-    //Cuadrar relación * -> *
+
 
     public String getNombre() {
         return nombre;
@@ -46,9 +60,11 @@ public class Autor {
         return libros;
     }
 
-    public void setLibros(List<Libro> libros) {
-        this.libros = libros;
+    public void addLibro(Libro libro) {
+        this.libros.add(libro);
+        libro.getAutores().add(this);
     }
+
 
     @Override
     public String toString() {
