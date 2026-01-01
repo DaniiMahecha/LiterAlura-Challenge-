@@ -1,27 +1,36 @@
 package com.example.literalura.principal;
 
+import com.example.literalura.model.Autor;
 import com.example.literalura.model.DatosResults;
 import com.example.literalura.model.DatosLibros;
 import com.example.literalura.model.Libro;
 import com.example.literalura.repository.AutoresRepository;
+import com.example.literalura.repository.LibrosRepository;
 import com.example.literalura.service.ConsumoAPI;
 import com.example.literalura.service.ConvierteDatos;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+@Component
 public class Principal {
-    private Scanner scanner = new Scanner(System.in);
+    private  Scanner scanner = new Scanner(System.in);
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConvierteDatos convierteDatos = new ConvierteDatos();
-    private static String URL_BASE = "https://gutendex.com/books/?";
-    private DatosResults listaLibros;
+    private final String URL_BASE = "https://gutendex.com/books/?";
+    private LibrosRepository librosRepository;
+    private AutoresRepository autoresRepository;
     private String libroInput;
     private List<DatosLibros> libroList = new ArrayList<>();
 
-    public Principal(AutoresRepository repository) {
+    public Principal(AutoresRepository autoresRepository,
+                     LibrosRepository librosRepository) {
+        this.autoresRepository = autoresRepository;
+        this.librosRepository = librosRepository;
     }
 
     public void menu(){
@@ -70,22 +79,34 @@ public class Principal {
     }
 
 
-    private void datosLibro() {
+    private DatosResults datosLibro() {
         System.out.println("Ingrese el nombre del libro que desea buscar");
         libroInput = scanner.nextLine();
         var json = consumoAPI.obtenerDatos((URL_BASE + "search=" + libroInput.toLowerCase()).replace(" ", "%20"));
-        listaLibros = convierteDatos.obtenerDatos(json, DatosResults.class);
+        DatosResults datos = convierteDatos.obtenerDatos(json, DatosResults.class);
+        return datos;
 
     }
 
     private void buscarLibroPorTitulo() {
-        datosLibro();
-        List<Libro> libro = listaLibros.listaLibros().stream()
-                .filter(book -> book.titulo().contains(libroInput))
-                .limit(1)
-                .map(Libro::new)
-                .collect(Collectors.toList());
-        System.out.println(libro);
+        var datos = datosLibro();
+        if (datos.listaLibros().isEmpty()){
+            System.out.println("Libro no encontrado!!");
+        }
+
+        var datosLibro = datos.listaLibros().get(0);
+        Optional<Libro> libroExitente = librosRepository.findByTituloContainsIgnoreCase(datosLibro.titulo());
+        if (!libroExitente.isPresent()){
+            Libro libro = new Libro(datosLibro);
+            Autor autor = libro.getAutor();
+            librosRepository.save(libro);
+            autoresRepository.save(autor);
+        }
+
+        if (libroExitente.isPresent()){
+            System.out.println(datosLibro + " ya existe en la base de datos :) ");
+        }
+
 
 
     }

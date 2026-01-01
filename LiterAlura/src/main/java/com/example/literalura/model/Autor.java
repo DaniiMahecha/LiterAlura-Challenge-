@@ -4,23 +4,22 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity
 @Table(name = "autores")
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column(unique = true)
     private String nombre;
+
     private Integer nacimiento;
     private Integer fallecimiento;
-    @ManyToMany
-    @JoinTable(
-            name = "autor_libro",
-            joinColumns = @JoinColumn(name = "autor_id"),
-            inverseJoinColumns = @JoinColumn(name = "libro_id")
-    )
-    private List<Libro> libros = new ArrayList<>();
+
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Libro> libros;
 
     public Autor(){}
 
@@ -56,15 +55,15 @@ public class Autor {
         this.fallecimiento = fallecimiento;
     }
 
+
     public List<Libro> getLibros() {
         return libros;
     }
 
-    public void addLibro(Libro libro) {
-        this.libros.add(libro);
-        libro.getAutores().add(this);
+    public void setLibros(List<Libro> libros) {
+        libros.forEach(book -> book.setAutor(this));
+        this.libros = libros;
     }
-
 
     @Override
     public String toString() {

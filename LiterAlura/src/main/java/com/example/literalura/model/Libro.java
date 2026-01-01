@@ -1,8 +1,6 @@
 package com.example.literalura.model;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,12 +13,20 @@ public class Libro {
     @Column(unique = true)
     private String titulo;
 
-    @ManyToMany(mappedBy = "libros")
-    private List<Autor> autores = new ArrayList<>();
+    @ManyToOne
+    private Autor autor;
 
-    @ElementCollection
+    public Autor getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Autor autor) {
+        this.autor = autor;
+    }
+
+
     @Enumerated(EnumType.STRING)
-    private List<Idiomas> idiomas = new ArrayList<>();
+    private List<Idiomas> idiomas;
 
     private Integer descargas;
     public Libro() {}
@@ -35,28 +41,17 @@ public class Libro {
         return titulo;
     }
 
-
-    public List<Autor> getAutores() {
-        return autores;
-    }
-
-
     public List<Idiomas> getIdiomas() {
         return idiomas;
     }
 
-
-    public void addAutor(Autor autor) {
-        this.autores.add(autor);
-        autor.getLibros().add(this);
-    }
 
 
     @Override
     public String toString() {
         return "----- LIBRO -----" + "\n" +
                 "Título: " + titulo + "\n" +
-                "Autor: " + autores + "\n" +
+                "Autor: " + autor + "\n" +
                 "Idioma: " + idiomas + "\n" +
                 "Descargas: " + descargas + "\n" +
                 "-----------------";
