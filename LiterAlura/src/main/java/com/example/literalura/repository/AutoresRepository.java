@@ -1,7 +1,6 @@
 package com.example.literalura.repository;
 
 import com.example.literalura.model.Autor;
-import com.example.literalura.model.Libro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

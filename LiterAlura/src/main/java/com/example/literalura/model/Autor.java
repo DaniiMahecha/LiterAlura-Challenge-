@@ -1,8 +1,6 @@
 package com.example.literalura.model;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -76,15 +74,15 @@ public class Autor {
                     .collect(Collectors.joining(", "));
         }
 
-        return  "=================================" +
+        return "=================" + '\n' +
                 "Autor: "
                 + nombre + '\n' +
                 "Nacimiento: "
                 + nacimiento + '\n' +
                 "Fallecimiento: "
                 + (fallecimiento != null ? fallecimiento : "No hay infomación")  + '\n' +
-                "Libros: "
-                + titulosLibros + '\n' +
-                "=================================" ;
+                "Libros: ["
+                + titulosLibros + ']' + '\n' +
+                "=================";
     }
 }

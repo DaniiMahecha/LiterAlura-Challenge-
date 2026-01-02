@@ -1,7 +1,5 @@
 package com.example.literalura.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public enum Idiomas {
 

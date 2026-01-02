@@ -5,14 +5,14 @@ import com.example.literalura.repository.AutoresRepository;
 import com.example.literalura.repository.LibrosRepository;
 import com.example.literalura.service.ConsumoAPI;
 import com.example.literalura.service.ConvierteDatos;
-import org.springframework.stereotype.Component;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-import java.util.stream.Collectors;
+
 
 
 public class Principal {
@@ -185,12 +185,20 @@ public class Principal {
                 5)        it (Italiano)
                 """;
         System.out.println(menu);
-        String idioma = scanner.nextLine().toUpperCase() ;
+        String idioma = scanner.nextLine().toLowerCase().trim();
 
         System.out.println("---- Resultados ----");
 
-        List<Libro> libros = librosRepository.findByIdiomas(Idiomas.fromAPI(idioma));
-        libros.forEach(System.out::println);
+        try {
+            Idiomas dbIdioma = Idiomas.fromAPI(idioma);
+            List<Libro> libros = librosRepository.findByIdiomas(dbIdioma);
+            if (libros.isEmpty()){
+                System.out.println("No hay libros en ese idioma en la base de datos");
+            }
+            libros.forEach(System.out::println);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Idioma no valido ingrese por favor en, es, fr, pt o it");
+        }
 
     }
 
