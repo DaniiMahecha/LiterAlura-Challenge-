@@ -67,10 +67,10 @@ public class Autor {
 
     @Override
     public String toString() {
-        return "Autor{" +
-                "nombre='" + nombre + '\'' +
-                ", nacimiento=" + nacimiento +
-                ", fallecimiento=" + fallecimiento +
-                '}';
+        return "[" +
+                nombre + '\'' +
+                "| nacimiento (" + nacimiento + ")" +
+                "| fallecimiento (" + fallecimiento + ")" +
+                ']';
     }
 }
