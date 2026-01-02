@@ -26,7 +26,7 @@ public class Libro {
 
 
     @Enumerated(EnumType.STRING)
-    private List<Idiomas> idiomas;
+    private Idiomas idiomas;
 
     private Integer descargas;
     public Libro() {}
@@ -34,18 +34,20 @@ public class Libro {
     public Libro(DatosLibros libro) {
         this.titulo = libro.titulo();
         this.descargas = libro.descargas();
-        this.idiomas = Idiomas.fromAPI(libro.idiomas());
+        this.idiomas = Idiomas.fromAPI(libro.idiomas().get(0));
     }
 
     public String getTitulo() {
         return titulo;
     }
 
-    public List<Idiomas> getIdiomas() {
+    public Idiomas getIdiomas() {
         return idiomas;
     }
 
-
+    public Integer getDescargas() {
+        return descargas;
+    }
 
     @Override
     public String toString() {

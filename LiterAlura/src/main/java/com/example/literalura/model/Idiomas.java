@@ -17,20 +17,16 @@ public enum Idiomas {
             this.code = code;
         }
 
-        public static List<Idiomas> fromAPI(List<String> codes) {
-            List<Idiomas> result = new ArrayList<>();
+        public static Idiomas fromAPI(String language) {
 
-            for (String code : codes) {
-                for (Idiomas idioma : Idiomas.values()) {
-                    if (idioma.code.equalsIgnoreCase(code)) {
-                        result.add(idioma);
-                        break;
+            for (Idiomas idioma : Idiomas.values()) {
+                if (idioma.code.equalsIgnoreCase(language)) {
+                        return idioma;
                     }
                 }
-            }
-
-            return result;
+            throw new IllegalArgumentException("Ninguna categoria encontrada: " + language);
         }
+
 }
 
 

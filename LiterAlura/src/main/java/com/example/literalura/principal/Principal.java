@@ -1,15 +1,13 @@
 package com.example.literalura.principal;
 
-import com.example.literalura.model.Autor;
-import com.example.literalura.model.DatosResults;
-import com.example.literalura.model.DatosLibros;
-import com.example.literalura.model.Libro;
+import com.example.literalura.model.*;
 import com.example.literalura.repository.AutoresRepository;
 import com.example.literalura.repository.LibrosRepository;
 import com.example.literalura.service.ConsumoAPI;
 import com.example.literalura.service.ConvierteDatos;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -143,22 +141,57 @@ public class Principal {
     }
 
     private void listarLibrosEnBD() {
-        System.out.println("2");
+        List<Libro> datos =  librosRepository.findAll();
+        if (datos.isEmpty()){
+            System.out.println("No existen registros en la base de Datos");
+        } else {
+            datos.forEach(System.out::println);
+        }
     }
 
     private void listarAutoresEnBD() {
-        System.out.println("3");
+        List<Autor> datos = autoresRepository.findAll();
+        if (datos.isEmpty()){
+            System.out.println("No existen registros en la base de Datos");
+        } else {
+            datos.forEach(System.out::println);
+        }
     }
 
     private void listarAutoresPorFecha() {
-        System.out.println("4");
+        System.out.println("Consulte los autores vivos hasta un año específico");
+        Integer año = scanner.nextInt();
+        scanner.nextLine();
+        List<Autor> autores = autoresRepository.autorPorNacimiento(año);
+
+        if (año < 0 || año > LocalDate.now().getYear()){
+            System.out.println("Año invalido, vuelva a ingresar un año VALIDO");
+        }
+
+        if (autores.isEmpty()){
+            System.out.println("No hay autores vivos registrados en ese año");
+        }
+
+        autores.forEach(System.out::println);
     }
 
     private void listarLibrosPorIdiomaEnBD() {
-        System.out.println("5");
+        String menu = """
+                Escriba el idima que le interesa leer: 
+                1)        en (Inglés)
+                2)        es (Español)
+                3)        fr (Francés)
+                4)        pt (Portugués)
+                5)        it (Italiano)
+                """;
+        System.out.println(menu);
+        String idioma = scanner.nextLine().toUpperCase() ;
+
+        System.out.println("---- Resultados ----");
+
+        List<Libro> libros = librosRepository.findByIdiomas(Idiomas.fromAPI(idioma));
+        libros.forEach(System.out::println);
+
     }
-
-
-
 
 }

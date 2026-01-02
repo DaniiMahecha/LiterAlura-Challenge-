@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "autores")
@@ -67,10 +68,23 @@ public class Autor {
 
     @Override
     public String toString() {
-        return "[" +
-                nombre + '\'' +
-                "| nacimiento (" + nacimiento + ")" +
-                "| fallecimiento (" + fallecimiento + ")" +
-                ']';
+
+        String titulosLibros = "";
+        if (libros != null && !libros.isEmpty()) {
+            titulosLibros = libros.stream()
+                    .map(Libro::getTitulo)
+                    .collect(Collectors.joining(", "));
+        }
+
+        return  "=================================" +
+                "Autor: "
+                + nombre + '\n' +
+                "Nacimiento: "
+                + nacimiento + '\n' +
+                "Fallecimiento: "
+                + (fallecimiento != null ? fallecimiento : "No hay infomación")  + '\n' +
+                "Libros: "
+                + titulosLibros + '\n' +
+                "=================================" ;
     }
 }
