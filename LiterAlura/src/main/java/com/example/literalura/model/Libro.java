@@ -54,6 +54,6 @@ public class Libro {
                 "Autor: " + autor + "\n" +
                 "Idioma: " + idiomas + "\n" +
                 "Descargas: " + descargas + "\n" +
-                "-----------------";
+                "-----------------\n";
     }
 }
