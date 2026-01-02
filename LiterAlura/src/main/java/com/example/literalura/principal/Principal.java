@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-@Component
+
 public class Principal {
     private  Scanner scanner = new Scanner(System.in);
     private ConsumoAPI consumoAPI = new ConsumoAPI();
@@ -89,25 +89,56 @@ public class Principal {
     }
 
     private void buscarLibroPorTitulo() {
+
         var datos = datosLibro();
         if (datos.listaLibros().isEmpty()){
             System.out.println("Libro no encontrado!!");
+            return;
         }
 
         var datosLibro = datos.listaLibros().get(0);
-        Optional<Libro> libroExitente = librosRepository.findByTituloContainsIgnoreCase(datosLibro.titulo());
-        if (!libroExitente.isPresent()){
-            Libro libro = new Libro(datosLibro);
-            Autor autor = libro.getAutor();
-            librosRepository.save(libro);
-            autoresRepository.save(autor);
+
+        // Verificar si el libro ya existe
+        Optional<Libro> libroExistente = librosRepository.findByTituloContainsIgnoreCase(datosLibro.titulo());
+
+        if (libroExistente.isPresent()){
+            System.out.println("El libro '" + datosLibro.titulo() + "' ya existe en la base de datos :) ");
+            return;
         }
 
-        if (libroExitente.isPresent()){
-            System.out.println(datosLibro + " ya existe en la base de datos :) ");
+        // Verificar que el libro tenga al menos un autor
+        if (datosLibro.infoAutor() == null || datosLibro.infoAutor().isEmpty()) {
+            System.out.println("El libro no tiene información de autor");
+            return;
         }
 
+        // Obtener el primer autor del libro
+        var datosAutor = datosLibro.infoAutor().get(0);
 
+        // Buscar si el autor ya existe en la base de datos
+        Optional<Autor> autorExistente = autoresRepository.findByNombreContainsIgnoreCase(datosAutor.nombre());
+
+        Autor autor;
+        if (autorExistente.isPresent()) {
+            // Si el autor ya existe, usarlo
+            autor = autorExistente.get();
+            System.out.println("Autor existente encontrado: " + autor.getNombre());
+        } else {
+            // Si no existe, crear un nuevo autor
+            autor = new Autor(datosAutor);
+            autor = autoresRepository.save(autor);
+            System.out.println("Nuevo autor guardado: " + autor.getNombre());
+        }
+
+        // Crear el libro y asignarle el autor
+        Libro libro = new Libro(datosLibro);
+        libro.setAutor(autor);
+
+        // Guardar el libro
+        librosRepository.save(libro);
+
+        System.out.println("\n=== Libro guardado exitosamente ===");
+        System.out.println(libro);
 
     }
 
