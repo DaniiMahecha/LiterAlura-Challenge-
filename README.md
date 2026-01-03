@@ -1,7 +1,8 @@
 # 📚 LiterAlura
 
 <div align="center">
-
+<img width="500" height="500" alt="ff043987-239b-4661-bdb1-7f4ca6092c48" src="./Badge-Literalura.png" />
+   
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.9-brightgreen.svg)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue.svg)
@@ -615,6 +616,8 @@ Este proyecto fue desarrollado como parte del **Oracle ONE Backend Challenge II*
 
 <div align="center">
 
+<img width="500" height="500" alt="ff043987-239b-4661-bdb1-7f4ca6092c48" src="./Badge-Literalura.png" />
+
 ![Oracle ONE](https://img.shields.io/badge/Oracle%20ONE-Challenge%20Completed-FF0000?style=for-the-badge&logo=oracle)
 ![Alura](https://img.shields.io/badge/Alura%20Latam-Backend%20Developer-0055FF?style=for-the-badge)
 
@@ -628,7 +631,7 @@ Este proyecto fue desarrollado con fines educativos como parte del programa Orac
 
 ---
 
-## 👤 Autor
+## 👤 Daniel Felipe Mahecha Peña
 
 Desarrollado con 💙 como parte de mi formación en desarrollo backend con **Java** y **Spring Boot** en el programa **Oracle ONE** de **Alura Latam**.
 
