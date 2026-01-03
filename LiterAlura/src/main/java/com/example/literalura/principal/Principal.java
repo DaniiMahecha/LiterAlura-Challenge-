@@ -8,11 +8,8 @@ import com.example.literalura.service.ConvierteDatos;
 
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
-
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Principal {
@@ -40,6 +37,9 @@ public class Principal {
                     3 - listar autores registrados
                     4 - listar autores vivos en un determinado año
                     5 - listar libros por idioma
+                    6 - genera estadisticas de las descargas de todos los libros de la base de datos
+                    7 - top 10 libros más decargados
+                    8 - buscar autor por nombre
                     
                     0 - Salir
                     """;
@@ -63,6 +63,15 @@ public class Principal {
                 case 5:
                     listarLibrosPorIdiomaEnBD();
                     break;
+                case 6:
+                    generandoEstadisticas();
+                    break;
+                case 7:
+                    top10MasDescargados();
+                    break;
+                case 8:
+                    buscarAutorPorNombre();
+                    break;
                 case 0:
                     System.out.println("Saliendo...");
                     break;
@@ -75,7 +84,6 @@ public class Principal {
         }
 
     }
-
 
     private DatosResults datosLibro() {
         System.out.println("Ingrese el nombre del libro que desea buscar");
@@ -199,6 +207,62 @@ public class Principal {
         } catch (IllegalArgumentException e) {
             System.out.println("Idioma no valido ingrese por favor en, es, fr, pt o it");
         }
+
+    }
+
+    private void generandoEstadisticas() {
+        List<Libro> libros = librosRepository.findAll();
+        DoubleSummaryStatistics dst = libros.stream()
+                .filter(book -> book.getDescargas() > 0)
+                .mapToDouble(Libro::getDescargas)
+                .summaryStatistics();
+
+        System.out.printf("""
+                ------------------ Estadísticas ------------------
+                Media de descargas: %.2f
+                Máxima cantidad de descargas: %.2f [%s]
+                Minima cantidad de descargas: %.2f [%s]
+                Cantidad de libros en la base de datos: %d
+                --------------------------------------------------
+                """, dst.getAverage(),
+                dst.getMax(),
+                libros.stream()
+                .filter(book -> book.getDescargas() == dst.getMax())
+                .map(Libro::getTitulo)
+                        .collect(Collectors.joining(", ")),
+
+                dst.getMin(),
+                libros.stream()
+                        .filter(book -> book.getDescargas() == dst.getMin())
+                        .map(Libro::getTitulo)
+                        .collect(Collectors.joining(", ")),
+                dst.getCount());
+    }
+
+    private void top10MasDescargados() {
+        List<Libro> libros = librosRepository.findAll();
+        List<Libro> top10 =
+                libros.stream()
+                        .sorted(Comparator.comparing(Libro::getDescargas).reversed())
+                        .limit(10)
+                        .collect(Collectors.toList());
+
+        System.out.println("\n===== TOP 10 LIBROS MÁS DESCARGADOS =====\n");
+        top10.forEach(libro ->
+                System.out.printf("%s - %d descargas\n",
+                        libro.getTitulo(),
+                        libro.getDescargas()));
+
+    }
+
+    private void buscarAutorPorNombre() {
+        System.out.println("Ingrese el nombre del autor que desea encontrar: ");
+        String nombre = scanner.nextLine();
+        Optional<Autor> autor = autoresRepository.findByNombreContainsIgnoreCase(nombre);
+        if (autor.isPresent()){
+            System.out.println(autor.get());
+        }
+        System.out.println("Autor no encontrado en la base de datos");
 
     }
 
